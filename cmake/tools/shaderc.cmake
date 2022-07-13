@@ -20,6 +20,7 @@ include( ${CMAKE_CURRENT_LIST_DIR}/../3rdparty/webgpu.cmake )
 add_library( shaderclib STATIC ${BGFX_DIR}/tools/shaderc/shaderc.cpp ${BGFX_DIR}/tools/shaderc/shaderc.h ${BGFX_DIR}/tools/shaderc/shaderc_glsl.cpp ${BGFX_DIR}/tools/shaderc/shaderc_hlsl.cpp ${BGFX_DIR}/tools/shaderc/shaderc_pssl.cpp ${BGFX_DIR}/tools/shaderc/shaderc_spirv.cpp ${BGFX_DIR}/tools/shaderc/shaderc_metal.cpp )
 target_compile_definitions( shaderclib PRIVATE "-D_CRT_SECURE_NO_WARNINGS" )
 set_target_properties( shaderclib PROPERTIES FOLDER "bgfx/tools" )
+target_include_directories( shaderclib PRIVATE ${BGFX_DIR}/src/)
 target_link_libraries(shaderclib PRIVATE bx bimg bgfx-vertexlayout bgfx-shader fcpp glsl-optimizer glslang spirv-cross spirv-tools webgpu)
 
 add_executable( shaderc )
@@ -29,6 +30,7 @@ target_link_libraries(shaderc PRIVATE shaderclib bimg bgfx-vertexlayout bgfx-sha
 
 add_library( shadercdyn SHARED shaderlib.cpp )
 set_target_properties( shadercdyn PROPERTIES FOLDER "bgfx/tools" )
+set_target_properties( shadercdyn PROPERTIES PUBLIC_HEADER "${BGFX_DIR}/tools/shaderc/shaderc.h;${BGFX_DIR}/src/vertexlayout.h")
 target_link_libraries(shadercdyn PRIVATE shaderclib bimg bgfx-vertexlayout bgfx-shader )
 
 
