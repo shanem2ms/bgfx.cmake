@@ -30,6 +30,10 @@ endif()
 # Create the bx target
 add_library( bx STATIC ${BX_SOURCES} )
 
+target_compile_features( bx PUBLIC cxx_std_14 )
+# (note: see bx\scripts\toolchain.lua for equivalent compiler flag)
+target_compile_options( bx PUBLIC $<$<CXX_COMPILER_ID:MSVC>:/Zc:__cplusplus> )
+
 # Link against psapi on Windows
 if( WIN32 )
 	target_link_libraries( bx PUBLIC psapi )
@@ -67,7 +71,7 @@ target_compile_definitions( bx PUBLIC "__STDC_LIMIT_MACROS" )
 target_compile_definitions( bx PUBLIC "__STDC_FORMAT_MACROS" )
 target_compile_definitions( bx PUBLIC "__STDC_CONSTANT_MACROS" )
 
-target_compile_definitions(bx PUBLIC "BX_CONFIG_DEBUG=$<CONFIG:Debug>")
+target_compile_definitions(bx PUBLIC "BX_CONFIG_DEBUG=$<IF:$<CONFIG:Debug>,1,$<BOOL:${BX_CONFIG_DEBUG}>>")
 
 # Additional dependencies on Unix
 if (ANDROID)
