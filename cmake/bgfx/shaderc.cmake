@@ -25,7 +25,11 @@ add_library(
 target_compile_definitions( shaderclib PRIVATE "-D_CRT_SECURE_NO_WARNINGS" )
 set_target_properties( shaderclib PROPERTIES FOLDER "bgfx/tools" )
 target_include_directories( shaderclib PRIVATE ${BGFX_DIR}/src/)
-target_link_libraries(shaderclib PRIVATE bx bimg bgfx-vertexlayout bgfx-shader fcpp glsl-optimizer glslang spirv-cross spirv-tools webgpu)
+target_link_libraries(shaderclib PRIVATE bx bimg bgfx-vertexlayout fcpp glsl-optimizer glslang spirv-cross spirv-tools webgpu)
+if(BGFX_AMALGAMATED)
+	target_link_libraries(shaderclib PRIVATE bgfx-shader)
+endif()
+
 
 add_executable(shaderc)
 
@@ -37,9 +41,6 @@ target_link_libraries(
 			bgfx-vertexlayout 
 			bgfx-shader
 )
-if(BGFX_AMALGAMATED)
-	target_link_libraries(shaderc PRIVATE bgfx-shader)
-endif()
 
 set_target_properties(
 	shaderc PROPERTIES FOLDER "bgfx/tools" #
