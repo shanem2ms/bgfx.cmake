@@ -17,21 +17,43 @@ file(
 	${BGFX_DIR}/src/shader* #
 )
 
-add_library( 
-		shaderclib 
-		STATIC 
-		${SHADERC_SOURCES} )
+add_library(shaderclib STATIC ${SHADERC_SOURCES})
 
-target_compile_definitions( shaderclib PRIVATE "-D_CRT_SECURE_NO_WARNINGS" )
-set_target_properties( shaderclib PROPERTIES FOLDER "bgfx/tools" )
-target_include_directories( shaderclib PRIVATE ${BGFX_DIR}/src/)
-target_link_libraries(shaderclib PRIVATE bx bimg bgfx-vertexlayout fcpp glsl-optimizer glslang spirv-cross spirv-tools webgpu)
+target_link_libraries(
+	shaderclib
+	PRIVATE bx
+			bgfx-vertexlayout
+			fcpp
+			glslang
+			glsl-optimizer
+			spirv-opt
+			spirv-cross
+)
+target_link_libraries(
+	shaderclib
+	PRIVATE bx
+			bimg
+			bgfx-vertexlayout
+			fcpp
+			glslang
+			glsl-optimizer
+			spirv-opt
+			spirv-cross
+			webgpu
+)
+
 if(BGFX_AMALGAMATED)
 	target_link_libraries(shaderclib PRIVATE bgfx-shader)
 endif()
 
+set_target_properties(
+	shaderclib PROPERTIES FOLDER "bgfx/tools" #
+					   OUTPUT_NAME ${BGFX_TOOLS_PREFIX}shaderclib #
+)
 
-add_executable(shaderc)
+add_executable(
+	shaderc
+)
 
 target_link_libraries(
 	shaderc
@@ -41,21 +63,6 @@ target_link_libraries(
 			bgfx-vertexlayout 
 			bgfx-shader
 )
-
-set_target_properties(
-	shaderc PROPERTIES FOLDER "bgfx/tools" #
-					   OUTPUT_NAME ${BGFX_TOOLS_PREFIX}shaderc #
-)
-
-add_library( shadercdyn 
-	SHARED 
-	${CMAKE_SOURCE_DIR}/shaderlib.cpp )
-set_target_properties( shadercdyn 
-	PROPERTIES FOLDER "bgfx/tools" )
-set_target_properties( shadercdyn 
-	PROPERTIES PUBLIC_HEADER "${BGFX_DIR}/tools/shaderc/shaderc.h;${BGFX_DIR}/src/vertexlayout.h")
-target_link_libraries(shadercdyn 
-	PRIVATE shaderclib bimg bgfx-vertexlayout bgfx-shader )
 
 if(BGFX_BUILD_TOOLS_SHADER)
 	add_executable(bgfx::shaderc ALIAS shaderc)
@@ -70,9 +77,16 @@ elseif(IOS)
 	set_target_properties(shaderc PROPERTIES MACOSX_BUNDLE ON MACOSX_BUNDLE_GUI_IDENTIFIER shaderc)
 endif()
 
+add_library( shadercdyn 
+	SHARED 
+	${CMAKE_SOURCE_DIR}/shaderlib.cpp )
+set_target_properties( shadercdyn 
+	PROPERTIES FOLDER "bgfx/tools" )
+set_target_properties( shadercdyn 
+	PROPERTIES PUBLIC_HEADER "${BGFX_DIR}/tools/shaderc/shaderc.h;${BGFX_DIR}/src/vertexlayout.h")
+target_link_libraries(shadercdyn 
+	PRIVATE shaderclib bimg bgfx-vertexlayout bgfx-shader )
+
 if(BGFX_INSTALL)
 	install(TARGETS shaderc EXPORT "${TARGETS_EXPORT_NAME}" DESTINATION "${CMAKE_INSTALL_BINDIR}")
-	install (TARGETS shadercdyn LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" 
-		PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
-
 endif()

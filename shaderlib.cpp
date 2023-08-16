@@ -7,7 +7,7 @@ namespace bx
 namespace bgfx
 {
 struct Options;
-bool compileShader(const char* _varying, const char* _comment, char* _shader, uint32_t _shaderLen, Options& _options, bx::WriterI* _writer);
+bool compileShader(const char* _varying, const char* _comment, char* _shader, uint32_t _shaderLen, Options& _options, bx::WriterI* _shaderWriter, bx::WriterI* _messageWriter);
 int compileShader(int _argc, const char* _argv[]);
 }
 
@@ -19,8 +19,8 @@ extern "C"
 	}
 
 	bool __declspec(dllexport) 
-		compileShader(const char* _varying, const char* _comment, char* _shader, uint32_t _shaderLen, bgfx::Options& _options, bx::WriterI* _writer)
+		compileShader(const char* _varying, const char* _comment, char* _shader, uint32_t _shaderLen, bgfx::Options& _options, bx::WriterI* _writer, bx::WriterI* _messageWriter)
 	{
-		return bgfx::compileShader(_varying, _comment, _shader, _shaderLen, _options, _writer);
+		return bgfx::compileShader(_varying, _comment, _shader, _shaderLen, _options, _writer, _messageWriter);
 	}
 }
