@@ -89,4 +89,5 @@ target_link_libraries(shadercdyn
 
 if(BGFX_INSTALL)
 	install(TARGETS shaderc EXPORT "${TARGETS_EXPORT_NAME}" DESTINATION "${CMAKE_INSTALL_BINDIR}")
+	install(TARGETS shadercdyn EXPORT "${TARGETS_EXPORT_NAME}")
 endif()
