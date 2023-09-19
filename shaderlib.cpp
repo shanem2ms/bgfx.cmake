@@ -13,12 +13,12 @@ int compileShader(int _argc, const char* _argv[]);
 
 extern "C"
 {
-	int __declspec(dllexport) compileShaderCmd(int _argc, const char* _argv[])
+	int compileShaderCmd(int _argc, const char* _argv[])
 	{
 		return bgfx::compileShader(_argc, _argv);
 	}
 
-	bool __declspec(dllexport) 
+	bool
 		compileShader(const char* _varying, const char* _comment, char* _shader, uint32_t _shaderLen, bgfx::Options& _options, bx::WriterI* _writer, bx::WriterI* _messageWriter)
 	{
 		return bgfx::compileShader(_varying, _comment, _shader, _shaderLen, _options, _writer, _messageWriter);

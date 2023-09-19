@@ -78,7 +78,7 @@ elseif(IOS)
 endif()
 
 add_library( shadercdyn 
-	SHARED 
+	STATIC 
 	${CMAKE_SOURCE_DIR}/shaderlib.cpp )
 set_target_properties( shadercdyn 
 	PROPERTIES FOLDER "bgfx/tools" )
