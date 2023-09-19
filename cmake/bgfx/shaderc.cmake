@@ -51,14 +51,18 @@ set_target_properties(
 					   OUTPUT_NAME ${BGFX_TOOLS_PREFIX}shaderclib #
 )
 
+add_custom_target(shaderclibcmb ALL
+   BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/shaderclibcmb.lib
+   COMMAND ${CMAKE_AR} /OUT:${CMAKE_CURRENT_BINARY_DIR}/shaderclibcmb.lib $<TARGET_FILE:shaderclib> $<TARGET_FILE:glslang> $<TARGET_FILE:glsl-optimizer> $<TARGET_FILE:spirv-opt> $<TARGET_FILE:spirv-cross> $<TARGET_FILE:fcpp>)
+
 add_executable(
 	shaderc
 )
 
 target_link_libraries(
-	shaderc
+	shaderc 
 	PRIVATE 
-			shaderclib 
+			${CMAKE_CURRENT_BINARY_DIR}/shaderclibcmb.lib
 			bimg 
 			bgfx-vertexlayout 
 			bgfx-shader
@@ -89,5 +93,5 @@ target_link_libraries(shadercdyn
 
 if(BGFX_INSTALL)
 	install(TARGETS shaderc EXPORT "${TARGETS_EXPORT_NAME}" DESTINATION "${CMAKE_INSTALL_BINDIR}")
-	install(TARGETS shadercdyn EXPORT "${TARGETS_EXPORT_NAME}")
+	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/shaderclibcmb.lib DESTINATION "${CMAKE_INSTALL_LIBDIR}")
 endif()
